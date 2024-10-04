@@ -27,7 +27,7 @@ createApp({
 			month: new Date().getMonth() + 1,
 			day: new Date().getDate(),
 			currentYear: new Date().getFullYear(),
-			currentMonth: new Date().getMonth() + 1,
+			currentMonth: new Date().getMonth(),
 			weekdays: ['一', '二', '三', '四', '五', '六', '日'],
 			quickSugar: '',
 			quickInsulin: '',
@@ -180,7 +180,7 @@ createApp({
 						plugins: {
 							title: {
 								display: true,
-								text: this.currentMonth + '月血糖走勢圖',
+								text: this.currentMonth + 1 + '月血糖走勢圖',
 								font: {
 									size: 20, // 標題的字體大小
 								},
