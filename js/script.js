@@ -27,7 +27,7 @@ createApp({
 			month: new Date().getMonth() + 1,
 			day: new Date().getDate(),
 			currentYear: new Date().getFullYear(),
-			currentMonth: new Date().getMonth(),
+			currentMonth: new Date().getMonth() + 1,
 			weekdays: ['一', '二', '三', '四', '五', '六', '日'],
 			quickSugar: '',
 			quickInsulin: '',
