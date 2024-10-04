@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html lang="en">
+	<head>
+		<meta charset="UTF-8" />
+		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+		<title>牛奶血糖記錄網</title>
+		<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.1/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-F3w7mX95PdgyTmZZMECAngseQB83DfGTowi0iMjiWaeVhAn4FJkqJByhZMI3AhiU" crossorigin="anonymous" />
+		<link rel="stylesheet" href="css/reset.css" />
+		<link rel="stylesheet" href="css/style.css" />
+		<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css" integrity="sha512-Kc323vGBEqzTmouAECnVceyQqyqdsSiqLQISBL29aUW4U/M7pSPA/gEUZQqv1cwx4OnYxTxve5UMg5GT6L4JJg==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+		<script src="https://unpkg.com/vue@3/dist/vue.global.js"></script>
+		<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+		<script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-datalabels"></script>
+	</head>
+	<body>
+		<div id="app">
+			<div class="container">
+				<div class="row">
+					<div class="col-md-6">
+						<div class="card w-100 h-100">
+							<img class="w-100 h-100" src="image/avatar.png" alt="" />
+						</div>
+					</div>
+					<div class="col-md-6">
+						<div class="card w-100 h-100">
+							<div class="card-body">
+								<h5 class="card-title">基本資料</h5>
+								<ul class="list-unstyled">
+									<li>姓名：牛奶</li>
+									<li>生日：2012/8/8 ({{Math.floor(birthday / 365)}}歲{{ birthday % 365 }}天)</li>
+									<li>血型：A型</li>
+									<li>體重：5.7公斤</li>
+								</ul>
+							</div>
+						</div>
+					</div>
+					<div class="col-12">
+						<div class="card pb-3 w-100 h-100">
+							<h1 class="text-center py-3 user-select">
+								<i class="fa-solid fa-caret-left" @click="previousMonth"></i>
+								{{ currentYear }}年{{ currentMonth + 1 }}月 紀錄表
+								<i class="fa-solid fa-caret-right" @click="nextMonth"></i>
+							</h1>
+							<table>
+								<thead>
+									<tr>
+										<th class="text-center" v-for="day in weekdays" :key="day">{{ day }}</th>
+									</tr>
+								</thead>
+								<tbody>
+									<tr v-for="(week, index) in calendarRows" :key="index">
+										<td v-for="(day, dayIndex) in week" :key="dayIndex" class="cell text-center" :class="{ blank: day.date === null }">
+											<p v-if="day.date != null" :class="{ month:day.date }">{{ day.date }}</p>
+											<p v-if="day.date != null && mode == 'default'" class="day">{{ recordData[day.date]?.morning.sugar ? recordData[day.date]?.morning.sugar : "" }}</p>
+											<input v-model="recordData[day.date].morning.sugar" v-if="day.date != null && mode == 'edit'" class="day" type="text" />
+											<select v-if="day.date != null && mode == 'edit'" v-model="recordData[day.date].morning.insulin" class="day">
+												<option value="" disabled selected hidden>胰島素</option>
+												<option value="0">0</option>
+												<option value="0.5">0.5</option>
+												<option value="1">1</option>
+												<option value="1.5">1.5</option>
+												<option value="2">2</option>
+											</select>
+											<p v-if="day.date != null && mode == 'default'" class="day">{{ recordData[day.date]?.night.sugar ? recordData[day.date]?.night.sugar : "" }}</p>
+											<input v-model="recordData[day.date].night.sugar" v-if="day.date != null && mode == 'edit'" class="day" type="text" />
+											<select v-if="day.date != null && mode == 'edit'" v-model="recordData[day.date].night.insulin" class="day">
+												<option value="" disabled selected hidden>胰島素</option>
+												<option value="0">0</option>
+												<option value="0.5">0.5</option>
+												<option value="1">1</option>
+												<option value="1.5">1.5</option>
+												<option value="2">2</option>
+											</select>
+										</td>
+									</tr>
+								</tbody>
+							</table>
+						</div>
+					</div>
+					<div class="col-12">
+						<div class="card pb-3 w-100 h-100">
+							<canvas id="monthChart"></canvas>
+						</div>
+					</div>
+					<div class="col-md-6">
+						<div class="card pb-3 w-100 h-100">
+							<canvas id="sugarChart"></canvas>
+						</div>
+					</div>
+				</div>
+			</div>
+			<div class="overlay" v-show="overlay">
+				<div class="form-container">
+					<div>
+						<div>
+							<input type="number" placeholder="輸入牛奶的血糖" v-model="quickSugar" />
+						</div>
+						<div>
+							<select v-model="quickInsulin">
+								<option value="">請選擇胰島素劑量</option>
+								<option value="0">0格</option>
+								<option value="0.5">0.5小格</option>
+								<option value="1">1小格</option>
+								<option value="1.5">1.5小格</option>
+								<option value="2">2小格</option>
+							</select>
+						</div>
+					</div>
+					<div class="button-group">
+						<button class="cancel-btn" @click="overlay=false">取消</button>
+						<button class="confirm-btn" @click="quickRecord">確定</button>
+					</div>
+				</div>
+			</div>
+			<button class="add-button" @click="overlay = true"><i class="fa-solid fa-plus"></i></button>
+			<button v-if="mode == 'default'" class="edit-button" @click="mode='edit'"><i class="fa-regular fa-pen-to-square"></i></button>
+			<button v-if="mode == 'edit'" class="confirm-button" @click="submit"><i class="fa-solid fa-check"></i></button>
+			<button class="curve-button"><i class="fa-solid fa-chart-line"></i></button>
+			<div style="height: 500px"></div>
+		</div>
+		<script type="module" src="js/script.js"></script>
+	</body>
+</html>
