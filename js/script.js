@@ -180,7 +180,7 @@ createApp({
 						plugins: {
 							title: {
 								display: true,
-								text: this.currentMonth + 1 + '月血糖走勢圖',
+								text: this.currentMonth + '月血糖走勢圖',
 								font: {
 									size: 20, // 標題的字體大小
 								},
