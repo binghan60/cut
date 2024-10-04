@@ -326,5 +326,6 @@ createApp({
 	mounted() {
 		this.createChart();
 		this.creatSugarChart();
+		console.log(this.currentMonth);
 	},
 }).mount('#app');
