@@ -214,8 +214,6 @@ createApp({
 						},
 					},
 				});
-			} else {
-				console.log('No valid data to display on chart');
 			}
 		},
 		creatSugarChart() {
@@ -264,8 +262,6 @@ createApp({
 						},
 					},
 				});
-			} else {
-				console.log('No valid data to display on chart');
 			}
 		},
 	},
@@ -283,24 +279,24 @@ createApp({
 							for (let i = 1; i <= daysInMonth; i++) {
 								this.recordData[i] = { morning: { sugar: '', insulin: '' }, night: { sugar: '', insulin: '' } };
 							}
-							this.recordData.sugarCurve1 = [
-								{ time: '', sugar: '' },
-								{ time: '', sugar: '' },
-								{ time: '', sugar: '' },
-								{ time: '', sugar: '' },
-								{ time: '', sugar: '' },
-								{ time: '', sugar: '' },
-								{ time: '', sugar: '' },
-							];
-							this.recordData.sugarCurve2 = [
-								{ time: '', sugar: '' },
-								{ time: '', sugar: '' },
-								{ time: '', sugar: '' },
-								{ time: '', sugar: '' },
-								{ time: '', sugar: '' },
-								{ time: '', sugar: '' },
-								{ time: '', sugar: '' },
-							];
+							// this.recordData.sugarCurve1 = [
+							// 	{ time: '', sugar: '' },
+							// 	{ time: '', sugar: '' },
+							// 	{ time: '', sugar: '' },
+							// 	{ time: '', sugar: '' },
+							// 	{ time: '', sugar: '' },
+							// 	{ time: '', sugar: '' },
+							// 	{ time: '', sugar: '' },
+							// ];
+							// this.recordData.sugarCurve2 = [
+							// 	{ time: '', sugar: '' },
+							// 	{ time: '', sugar: '' },
+							// 	{ time: '', sugar: '' },
+							// 	{ time: '', sugar: '' },
+							// 	{ time: '', sugar: '' },
+							// 	{ time: '', sugar: '' },
+							// 	{ time: '', sugar: '' },
+							// ];
 							set(ref(db, `users/milk/${this.currentYear}/${newValue + 1}`), this.recordData)
 								.then(() => {})
 								.catch((error) => {
@@ -318,14 +314,13 @@ createApp({
 		recordData: {
 			handler() {
 				this.createChart();
-				this.creatSugarChart();
+				// this.creatSugarChart();
 			},
 			deep: true,
 		},
 	},
 	mounted() {
 		this.createChart();
-		this.creatSugarChart();
-		console.log(this.currentMonth);
+		// this.creatSugarChart();
 	},
 }).mount('#app');
