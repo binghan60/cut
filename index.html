@@ -52,8 +52,8 @@
 										<td v-for="(day, dayIndex) in week" :key="dayIndex" class="cell text-center" :class="{ blank: day.date === null }">
 											<p v-if="day.date != null" :class="{ month:day.date }">{{ day.date }}</p>
 											<p v-if="day.date != null && mode == 'default'" class="day">{{ recordData[day.date]?.morning.sugar ? recordData[day.date]?.morning.sugar : "" }}</p>
-											<input v-model="recordData[day.date].morning.sugar" v-if="day.date != null && mode == 'edit'" class="day" type="text" />
-											<select v-if="day.date != null && mode == 'edit'" v-model="recordData[day.date].morning.insulin" class="day">
+											<input v-model.lazy="recordData[day.date].morning.sugar" v-if="day.date != null && mode == 'edit'" class="day" type="text" />
+											<select v-if="day.date != null && mode == 'edit'" v-model.lazy="recordData[day.date].morning.insulin" class="day">
 												<option value="" disabled selected hidden>胰島素</option>
 												<option value="0">0</option>
 												<option value="0.5">0.5</option>
@@ -62,8 +62,8 @@
 												<option value="2">2</option>
 											</select>
 											<p v-if="day.date != null && mode == 'default'" class="day">{{ recordData[day.date]?.night.sugar ? recordData[day.date]?.night.sugar : "" }}</p>
-											<input v-model="recordData[day.date].night.sugar" v-if="day.date != null && mode == 'edit'" class="day" type="text" />
-											<select v-if="day.date != null && mode == 'edit'" v-model="recordData[day.date].night.insulin" class="day">
+											<input v-model.lazy="recordData[day.date].night.sugar" v-if="day.date != null && mode == 'edit'" class="day" type="text" />
+											<select v-if="day.date != null && mode == 'edit'" v-model.lazy="recordData[day.date].night.insulin" class="day">
 												<option value="" disabled selected hidden>胰島素</option>
 												<option value="0">0</option>
 												<option value="0.5">0.5</option>
@@ -82,11 +82,11 @@
 							<canvas id="monthChart"></canvas>
 						</div>
 					</div>
-					<div class="col-md-6">
+					<!-- <div class="col-md-6">
 						<div class="card pb-3 w-100 h-100">
 							<canvas id="sugarChart"></canvas>
 						</div>
-					</div>
+					</div> -->
 				</div>
 			</div>
 			<div class="overlay" v-show="overlay">
